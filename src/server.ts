@@ -1,5 +1,6 @@
 import express from 'express'
 import { PrismaClient } from '@prisma/client'
+import { equal } from 'assert'
 
 const port = 3000
 const app = express()
@@ -16,22 +17,29 @@ app.get('/movies', async (_, res) => {
 })
 
 app.post('/movies', async (req, res) => {
+    const { title, genre_id, language_id, oscar_count, release_date } = req.body
 
-   const { title, genre_id, language_id, oscar_count, release_date } = req.body;
+    try {
+        const movieWithSameTitle = await prisma.movie.findFirst({
+            where: { title: { equals: title, mode: "insensitive"} },
+        });
 
-   try {
-    await prisma.movie.create({
-        data: {
-            title,
-            genre_id,
-            language_id,
-            oscar_count,
-            release_date: new Date(release_date)
-         },
-    })
-   }catch{
-      return res.status(500).send({ message: 'Erro ao criar o filme.' })
-   }
+        if (movieWithSameTitle) {
+            return res.status(409).send({ message: 'Filme com o mesmo título já existe.' })
+        }
+
+        await prisma.movie.create({
+            data: {
+                title,
+                genre_id,
+                language_id,
+                oscar_count,
+                release_date: new Date(release_date),
+            },
+        })
+    } catch {
+        return res.status(500).send({ message: 'Erro ao criar o filme.' })
+    }
 
     res.status(201).json({ message: 'Filme criado com sucesso!' })
 })
