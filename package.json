@@ -16,10 +16,12 @@
         "@types/node": "^18.15.11",
         "globals": "^17.11.0",
         "prettier": "3.9.6",
+        "prisma": "^4.13.0",
         "tsx": "^3.12.6",
         "typescript": "^5.1.6"
     },
     "dependencies": {
+        "@prisma/client": "^4.16.2",
         "express": "^5.2.1"
     }
 }
