@@ -19,6 +19,6 @@
         "moduleDetection": "force",
         "skipLibCheck": true,
     },
-    "include": ["src/**/*.ts"],
+    "include": ["src/**/*.ts", "swagger.json"],
     "exclude": ["node_modules", "dist"]
 }

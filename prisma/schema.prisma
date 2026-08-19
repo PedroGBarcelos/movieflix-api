@@ -1,33 +1,33 @@
-
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Genre {
-  id     Int      @id @default(autoincrement())
-  name   String?  @db.VarChar(100)
+  id     Int     @id @default(autoincrement())
+  name   String? @db.VarChar(100)
   movies Movie[]
 
   @@map("genres")
 }
 
 model Language {
-  id     Int      @id @default(autoincrement())
-  name   String?  @db.VarChar(100)
+  id     Int     @id @default(autoincrement())
+  name   String? @db.VarChar(100)
   movies Movie[]
 
   @@map("languages")
 }
 
 model Movie {
-  id           Int        @id @default(autoincrement())
-  title        String?    @db.VarChar(100)
-  release_date DateTime?  @db.Date
+  id           Int       @id @default(autoincrement())
+  title        String?   @db.VarChar(100)
+  release_date DateTime? @db.Date
   genre_id     Int?
   language_id  Int?
   oscar_count  Int?
