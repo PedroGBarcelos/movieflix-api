@@ -25,7 +25,9 @@ app.post('/movies', async (req, res) => {
         })
 
         if (movieWithSameTitle) {
-            return res.status(409).send({ message: 'Filme com o mesmo título já existe.' })
+            return res
+                .status(409)
+                .send({ message: 'Filme com o mesmo título já existe.' })
         }
 
         await prisma.movie.create({
@@ -42,9 +44,9 @@ app.post('/movies', async (req, res) => {
     }
 
     res.status(201).json({ message: 'Filme criado com sucesso!' })
-});
+})
 
-app.put('/movies/:id', async (req, res) => {
+;(app.put('/movies/:id', async (req, res) => {
     const id = Number(req.params.id)
 
     try {
@@ -66,12 +68,34 @@ app.put('/movies/:id', async (req, res) => {
             data: data,
         })
     } catch {
-        return res.status(500).send({ message: 'Erro ao atualizar o registro do filme.' })
+        return res
+            .status(500)
+            .send({ message: 'Erro ao atualizar o registro do filme.' })
     }
 
     res.status(200).send()
 }),
-    
+
+app.delete('/movies/:id', async (req, res) => {
+        const id = Number(req.params.id)
+
+        try {
+            const movie = await prisma.movie.findUnique({
+                where: { id },
+            })
+
+            if (!movie) {
+                return res.status(404).send({ message: 'Filme não encontrado' })
+            }
+
+            await prisma.movie.delete({ where: { id } })
+        } catch (error) {
+            res.status(500).send({ message: 'Falha ao remover o registro' })
+        }
+
+        res.status(200).send()
+}))
+
 app.listen(port, () => {
-        console.log(`Servidor em execução em http://localhost:${port}`)
+    console.log(`Servidor em execução em http://localhost:${port}`)
 })
